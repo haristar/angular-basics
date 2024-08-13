@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-user',
   template: `
-    Username: {{ username }}
+    Username: {{ username }}<br>
+    The input Parameter value is {{ inputParameter }}
   `,
   standalone: true,
 })
 export class UserComponent {
   username = 'John Doe';
+  @Input() inputParameter = '';
 }
 
 @Component({
@@ -68,6 +71,33 @@ export class EventComponent{
   }
 }
 
+@Component({
+  selector: "app-child",
+  standalone: true,
+  template: `
+    <button (click)="addItem()">ADD</button>
+  `,
+})
+export class ChildComponent{
+  @Output() addItemEvent = new EventEmitter<string>();
+  addItem() {
+    this.addItemEvent.emit("🐢");
+  }
+}
+
+@Component({
+  selector: 'app-defer',
+  template: `
+    <ul>
+      <li>hello</li>
+      <li>world</li>
+      <li>angular</li>
+    </ul>
+  `,
+  standalone: true
+})
+export class DeferComponent{}
+
 
 @Component({
   selector: 'app-root',
@@ -77,12 +107,15 @@ export class EventComponent{
     UserComponent,
     IfComponent,
     ForComponent,
-    EventComponent
+    EventComponent,
+    ChildComponent,
+    DeferComponent,
+    NgOptimizedImage
   ],
   template: `
   Hello Universe! A ping from{{ city }} {{1+1}}!
   <section>
-    <app-user></app-user>
+    <app-user inputParameter="InputParamwter"/>
   </section>
   <section>
     <app-if></app-if>
@@ -95,7 +128,31 @@ export class EventComponent{
   </div>
   <div>
     <app-event></app-event>
-  <div></div>
+  <div>
+    <app-child (addItemEvent) = "addItemParent($event)"></app-child>
+    <p>🐢 : {{item.length}}</p>
+  </div>
+  <section>
+    <h1>Defer Example : Loading Data Model</h1>
+    <p>
+      qwertyuiop;lkjhgfdscvbnm,mnbvcdxsdfghjkjbvcxcvb
+    </p>
+    @defer (on viewport) {
+      <app-defer/>
+    }@placeholder {
+      <p>Placeholder</p>
+    }@loading (minimum 2s) {
+      <p>Loading...</p>
+    }
+  </section>
+  <div>
+    <h3>Image Optimizer</h3>
+    <ul>
+      <li>
+        Image : <img [ngSrc]="dynamicImg" alt="alt-img" width="100" height="100" priority/>
+      </li>
+    </ul>
+  </div>
   `,
   styles: `
   :host {
@@ -106,4 +163,11 @@ export class AppComponent {
   title = 'demo-ang';
   city = 'New York';
   canEdit = true;
+  dynamicImg = "/assets/home.png";
+  item = new Array();
+
+  addItemParent(item: string){
+    console.log("parent ",item);
+    this.item.push(item);
+  }
 }
