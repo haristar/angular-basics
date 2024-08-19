@@ -163,7 +163,7 @@ export class AppComponent {
   title = 'demo-ang';
   city = 'New York';
   canEdit = true;
-  dynamicImg = "/assets/home.png";
+  dynamicImg = "crab.jpeg";
   item = new Array();
 
   addItemParent(item: string){
