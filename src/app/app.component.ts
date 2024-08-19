@@ -1,6 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -110,7 +110,9 @@ export class DeferComponent{}
     EventComponent,
     ChildComponent,
     DeferComponent,
-    NgOptimizedImage
+    NgOptimizedImage,
+    RouterOutlet,
+    RouterLink
   ],
   template: `
   Hello Universe! A ping from{{ city }} {{1+1}}!
@@ -152,6 +154,21 @@ export class DeferComponent{}
         Image : <img [ngSrc]="dynamicImg" alt="alt-img" width="100" height="100" priority/>
       </li>
     </ul>
+  </div>
+  <div>
+    <nav>
+      <a href="https://angular.io/" target="_blank">Angular</a>
+      |
+      <a href="https://github.com/haristar" target="_blank">Github</a>
+    </nav>
+  </div>
+  <div>
+    <nav>
+      <a routerLink="/home">home</a>
+      |
+      <a routerLink="/demo">Demo</a>
+    </nav>
+    <router-outlet></router-outlet>
   </div>
   `,
   styles: `
