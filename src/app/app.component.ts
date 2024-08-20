@@ -1,5 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -98,6 +99,54 @@ export class ChildComponent{
 })
 export class DeferComponent{}
 
+@Component({
+  selector: 'app-form',
+  standalone: true,
+  template: `
+    <label for="form-input">
+      Type an input word: <input id="form-input" type="text" [(ngModel)]="input">
+    </label>
+    <br>
+    <!-- <p>input is {{ input }}</p> -->
+     <button (click)="showPopup()">Pop-Up</button>
+  `,
+  imports: [FormsModule]
+})
+export class FormComponent{
+  input = '';
+
+  showPopup(){
+    alert(this.input);
+  }
+}
+
+@Component({
+  selector: 'app-react-form',
+  standalone: true,
+  template: `
+    <form [formGroup]="form"  (ngSubmit)="show()">
+      <label>
+        Name: <input type="text" formControlName="name">
+      </label>
+      <label>
+        Email: <input type="email" formControlName="email">
+      </label>
+      <button type="submit" [disabled]="!form.valid">Submit</button>
+    </form>
+  `,
+   imports: [ReactiveFormsModule]
+})
+export class ReactiveFormComponent{
+  form = new FormGroup({
+    name: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.email)
+  })
+
+  show(){
+    alert(this.form.value.name + " | " +this.form.value.email);
+  }
+}
+
 
 @Component({
   selector: 'app-root',
@@ -112,8 +161,10 @@ export class DeferComponent{}
     DeferComponent,
     NgOptimizedImage,
     RouterOutlet,
-    RouterLink
-  ],
+    RouterLink,
+    FormComponent,
+    ReactiveFormComponent
+],
   template: `
   Hello Universe! A ping from{{ city }} {{1+1}}!
   <section>
@@ -169,6 +220,15 @@ export class DeferComponent{}
       <a routerLink="/demo">Demo</a>
     </nav>
     <router-outlet></router-outlet>
+  </div>
+  <div>
+    <h3>FOrms</h3>
+    <app-form></app-form>
+  </div>
+  <br>
+  <div>
+    <h3>Reactive Forms</h3>
+    <app-react-form></app-react-form>
   </div>
   `,
   styles: `
