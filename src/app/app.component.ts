@@ -1,8 +1,9 @@
-import { NgOptimizedImage } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe, LowerCasePipe, NgOptimizedImage, UpperCasePipe } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { DiService } from './diservice.service';
+import { DemoPipe } from './demo.pipe';
 
 @Component({
   selector: 'app-user',
@@ -164,6 +165,35 @@ export class DiServiceComponent{
   }
 }
 
+@Component({
+  selector: 'app-pipes',
+  standalone: true,
+  template: `
+    <p>Uppercase : {{ msg | uppercase }}</p>
+    <p>Lowercase : {{ msg | lowercase }}</p>
+    <p>Currency : {{ cost | currency:'USD' }}</p>
+    <p>Date : {{ date | date:'medium' }}</p>
+    <p>Decimal : {{ num | number : '3.2-2' }}</p>
+    <h3>Custom Pipe</h3>
+    <p>{{ numb | demo }}</p>
+  `,
+  imports: [
+    UpperCasePipe,
+    LowerCasePipe,
+    CurrencyPipe,
+    DatePipe,
+    DecimalPipe,
+    DemoPipe
+  ]
+})
+export class PipesComponent{
+  msg = "heLlo thErs!"
+  cost = 10003
+  date = new Date("2022-01-01");
+  num = 10000.123
+  numb = 20
+}
+
 
 @Component({
   selector: 'app-root',
@@ -181,7 +211,8 @@ export class DiServiceComponent{
     RouterLink,
     FormComponent,
     ReactiveFormComponent,
-    DiServiceComponent
+    DiServiceComponent,
+    PipesComponent
 ],
   template: `
   Hello Universe! A ping from{{ city }} {{1+1}}!
@@ -251,6 +282,10 @@ export class DiServiceComponent{
   <div>
     <h3>DI Service</h3>
     <app-di-service></app-di-service>
+  </div>
+  <div>
+    <h3>Pipes</h3>
+    <app-pipes></app-pipes>
   </div>
   `,
   styles: `
