@@ -1,7 +1,8 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { DiService } from './diservice.service';
 
 @Component({
   selector: 'app-user',
@@ -147,6 +148,22 @@ export class ReactiveFormComponent{
   }
 }
 
+@Component({
+  selector: 'app-di-service',
+  standalone: true,
+  template: `
+    <!-- <p>{{ service.getAll().join('✨') }}</p> -->
+     <p>{{ service }}</p>
+  `,
+})
+export class DiServiceComponent{
+  // service = inject(DiService)
+  service = '';
+  constructor(private diservice: DiService){
+    this.service = this.diservice.getAll().join('✨')
+  }
+}
+
 
 @Component({
   selector: 'app-root',
@@ -163,7 +180,8 @@ export class ReactiveFormComponent{
     RouterOutlet,
     RouterLink,
     FormComponent,
-    ReactiveFormComponent
+    ReactiveFormComponent,
+    DiServiceComponent
 ],
   template: `
   Hello Universe! A ping from{{ city }} {{1+1}}!
@@ -229,6 +247,10 @@ export class ReactiveFormComponent{
   <div>
     <h3>Reactive Forms</h3>
     <app-react-form></app-react-form>
+  </div>
+  <div>
+    <h3>DI Service</h3>
+    <app-di-service></app-di-service>
   </div>
   `,
   styles: `
